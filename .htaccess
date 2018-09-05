@@ -1,0 +1,37 @@
+####
+# Change [DOMAIN] to your domain name (include .com or our extencion)
+####
+
+# Don't list directories
+Options -Indexes
+
+# Restrict Access to Files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql)$">
+	order allow,deny
+	deny from all
+</FilesMatch>
+
+# Error Documents
+ErrorDocument 404 /404.php
+  
+# Avoiding the user to know is a 403 error
+ErrorDocument 403 /404.php
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On 
+
+	#SSL Server (edit the remove WWW to https)
+		#RewriteCond %{SERVER_PORT} 80 
+		#RewriteRule ^(.*)$ https://[DOMAIN]/$1 [R,L]
+		
+	#Rewrite to eliminate the ".php"
+	RewriteBase /
+	RewriteRule ^index\.php$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /index.php [L]
+
+	# Remove www to prevent content duplication for search engines
+		#RewriteCond %{HTTP_HOST} !^[DOMAIN]/$ [NC]
+		#RewriteRule ^(.*)$ https://[DOMAIN]/$1 [R=301,L]
+</IfModule>
